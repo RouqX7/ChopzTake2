@@ -4,15 +4,43 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/foodbg"
     tools:context=".MainActivity">
 
+    <ImageView
+        android:id="@+id/imageview5"
+        android:layout_width="match_parent"
+        android:layout_height="320dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginBottom="220dp"
+        android:adjustViewBounds="false"
+        android:src="@drawable/logo_transparent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
+        android:layout_width="217dp"
+        android:layout_height="30dp"
+        android:id="@+id/textview7"
+        android:fontFamily="cursive"
+        android:textAlignment="center"
+        android:text="Coochie Village"
+        android:textAllCaps="true"
+        android:textColor="#FDFDFD"
+        android:textSize="17sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/imageview5"
+
+        />
+
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
