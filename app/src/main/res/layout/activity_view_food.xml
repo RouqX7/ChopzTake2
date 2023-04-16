@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_weight="1">
+
+    <LinearLayout
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp"
+    tools:context=".Admin.ViewFoodActivity">
+
+
+
+
+    <EditText
+        android:id="@+id/foodSearchBar"
+        android:layout_width="match_parent"
+        android:layout_height="83dp"
+        android:layout_weight="1"
+        android:ems="10"
+        android:hint="SEARCH"
+        android:inputType="textPersonName"
+        android:text="Name" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="574dp"
+            android:layout_weight="1"
+            android:paddingTop="20dp">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/foodViewRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </ScrollView>
+
+        <Button
+        android:id="@+id/svaeFoodSelectedBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Save" />
+
+</LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addFoodBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@android:drawable/ic_menu_add" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

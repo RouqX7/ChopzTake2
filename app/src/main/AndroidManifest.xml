@@ -10,16 +10,37 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Chops">
         <activity
-            android:name=".views.HomePageActivity"
+            android:name=".Admin.ViewFoodActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".views.Menu"
+            android:exported="false" />
+        <activity
+            android:name=".Admin.CreateFood"
+            android:exported="false" />
+        <activity
+            android:name=".Admin.CreateRestaurant"
+            android:exported="false" />
+        <activity
+            android:name=".Admin.ManageFoodActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Admin.ManageRestaurantActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Admin.AdminActivity"
             android:exported="false" />
         <activity
             android:name=".views.LoginActivity"
             android:exported="false" />
         <activity
             android:name=".views.CreateAccountActivity"
+            android:exported="false" />
+        <activity
+            android:name=".views.MainViewActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -3,7 +3,7 @@ package com.example.chops.Domain;
 public class FastDeliveryDomain {
     private String title;
     private String pic;
-    private double star;
+    private Double star;
     private int time;
 
     public FastDeliveryDomain(String title, String pic, double star, int time) {
@@ -29,7 +29,7 @@ public class FastDeliveryDomain {
         this.pic = pic;
     }
 
-    public double getStar() {
+    public Double getStar() {
         return star;
     }
 

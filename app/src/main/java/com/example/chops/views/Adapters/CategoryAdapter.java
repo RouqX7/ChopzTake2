@@ -1,4 +1,4 @@
-package com.example.chops.views;
+package com.example.chops.views.Adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;

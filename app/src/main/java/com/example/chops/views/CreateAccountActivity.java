@@ -9,12 +9,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.example.chops.DataProvider.CustomerProvider;
+import com.example.chops.Interfaces.ICallback;
 import com.example.chops.R;
-import com.example.chops.controllers.TestController;
+import com.example.chops.controllers.DBController;
+import com.example.chops.controllers.ValidationController;
+import com.example.chops.models.Customer;
 import com.google.firebase.auth.FirebaseAuth;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.UUID;
 
 public class CreateAccountActivity extends AppCompatActivity {
 
@@ -22,9 +26,6 @@ public class CreateAccountActivity extends AppCompatActivity {
     Button createAccountBtn;
     ProgressBar progressBar;
     TextView loginBtnTextView;
-    TestController testControl = new TestController();
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,44 +40,67 @@ public class CreateAccountActivity extends AppCompatActivity {
         loginBtnTextView = findViewById(R.id.login_text_view_btn);
 
         createAccountBtn.setOnClickListener(v-> createAccount());
-        loginBtnTextView.setOnClickListener((v ->  finish()));
+        loginBtnTextView.setOnClickListener((v) -> startActivity(new Intent(CreateAccountActivity.this,LoginActivity.class)));
     }
     void createAccount(){
         String email = emailEditText.getText().toString();
         String password = passwordEditText.getText().toString();
         String confirmPassword = confirmPasswordEditText.getText().toString();
 
-        boolean isValidated = validateData(email,password,confirmPassword);
-        if(!isValidated){
+        String emailError = ValidationController.validateEmail(email);
+        String passwordError = ValidationController.validatePassword(password);
+        String confirmPasswordError = ValidationController.validateConfirmPassword(password,confirmPassword);
+        emailEditText.setError(emailError);
+        passwordEditText.setError(passwordError);
+        confirmPasswordEditText.setError(confirmPasswordError);
+
+        if(emailError!= null||passwordError!=null|| confirmPasswordError!=null)
             return;
-        }
         createAccountInFirebase(email,password);
 
-
-    testControl.testMethod();
     }
 
     void createAccountInFirebase(String email,String password){
         changeInProgress(true);
 
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        firebaseAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(CreateAccountActivity.this,
-                task -> {
-                    changeInProgress(false);
-                    if(task.isSuccessful()) {
+        DBController.AUTHENTICATION.signUpWithEmailAndPassword(email, password, new ICallback() {
+            @Override
+            public void execute(Object... args) {
+                if(args.length>1){
+                    String uid = args[0] instanceof String ? (String) args[0] : null;
+                   String errorMessage = args.length>2 ? ((String) args[args.length-1]): null;
+                    boolean success = args[1] instanceof Boolean ? (Boolean) args[1] : false;
+                    if(success) {
                         //creating acc is done
                         Utility.showToast(CreateAccountActivity.this,"Successfully create account, Check email to verify");
-                        //firebaseAuth.getCurrentUser().sendEmailVerification();
-                        //firebaseAuth.signOut();
-                        goToHomepage();
-                        finish();
+                        System.out.println("uid = "+ uid);
+                        Customer c = new Customer(uid, UUID.randomUUID().toString(),null,email,null,null,null,1000);
+                        DBController.DATABASE.createCustomer(c, new ICallback() {
+                            @Override
+                            public void execute(Object... args) {
+                                String result = args[0] instanceof String ? (String) args[0] : null;
+                                boolean success = args[1] instanceof Boolean ? (Boolean) args[1] : false;
+                                changeInProgress(false);
+                                if(success){
+                                    CustomerProvider.currentCustomer = c;
+                                    goToHomepage();
+                                    finish();
+                                }else{
+                                    Utility.showToast(CreateAccountActivity.this,result);
+                                }
+                            }
+                        });
                     }else{
                         //failure
-                        Utility.showToast(CreateAccountActivity.this,task.getException().getLocalizedMessage());
+                        Utility.showToast(CreateAccountActivity.this,errorMessage);
 
                     }
                 }
-        );
+            }
+        });
+
+
 
     }
 
@@ -91,32 +115,8 @@ public class CreateAccountActivity extends AppCompatActivity {
 
     }
 
-    boolean validateData(String email,String password, String confirmPassword){
-        //validate the data that are input by the user.
-        String regex =  "^[a-zA-Z0-9_+&*-]+(?:\\."+
-                "[a-zA-Z0-9_+&*-]+)*@" +
-                "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
-                "A-Z]{2,7}$";
-
-        Pattern regexHolder = Pattern.compile(regex);
-        Matcher regexMatcher = regexHolder.matcher(email);
-        boolean isEmailMatching = regexMatcher.matches();
-
-        if(!isEmailMatching){
-            emailEditText.setError("Email is invalid");
-            return false;
-        }if (password.length()<6){
-            passwordEditText.setError("Password length is invalid");
-            return false;
-        }
-        if(!password.equals(confirmPassword)){
-            confirmPasswordEditText.setError("Password not matched");
-            return false;
-        }
-        return true;
-    }
     public void goToHomepage(){
-        Intent intent =  new Intent(this, HomePageActivity.class);
+        Intent intent =  new Intent(this, MainViewActivity.class);
         startActivity(intent);
     }
 
