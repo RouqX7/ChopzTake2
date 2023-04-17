@@ -8,6 +8,7 @@ import com.example.chops.models.Restaurant;
 import com.example.chops.views.Menu;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -107,6 +108,19 @@ public class FireDatabase implements IDatabase {
                 callback.execute(foodListRetrieved, true);
         }
         });
+    }
+
+    @Override
+    public void getFoodList(ICallback callback) {
+        db.collection("Foods").get().addOnSuccessListener(
+                (queryDocumentSnapshots )->{
+                    ArrayList<Food> foods = new ArrayList<>();
+                    for(DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()){
+                        foods.add(doc.toObject(Food.class));
+                    }
+                    callback.execute(foods);
+                }
+        );
     }
 
     @Override

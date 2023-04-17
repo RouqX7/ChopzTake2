@@ -31,7 +31,6 @@ public class ViewFoodActivity extends AppCompatActivity {
     Button svaeFoodSelectedBtn;
 
     FloatingActionButton addFoodBtn;
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

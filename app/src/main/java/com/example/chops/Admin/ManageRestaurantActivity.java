@@ -23,7 +23,6 @@ public class ManageRestaurantActivity extends AppCompatActivity {
     RestaurantAdapter restAdapter;
     FloatingActionButton fab;
 
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

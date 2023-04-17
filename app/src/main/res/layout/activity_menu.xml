@@ -10,7 +10,10 @@
         android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -25,7 +28,7 @@
                 app:srcCompat="@drawable/bgimg1" />
 
             <androidx.constraintlayout.utils.widget.ImageFilterView
-                android:id="@+id/imageFilterView"
+                android:id="@+id/menuViewRestaurantImage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:scaleType="centerCrop"
@@ -37,7 +40,7 @@
                 android:layout_height="match_parent">
 
                 <TextView
-                    android:id="@+id/textView5"
+                    android:id="@+id/menuViewRestaurantName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:hint="Restaurant Name"
@@ -55,10 +58,22 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"></LinearLayout>
+            android:layout_gravity="center_vertical"
+            android:layout_marginVertical="10dp"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <ProgressBar
+                android:id="@+id/progressFoodBar"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/menuResultView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginVertical="20dp"
@@ -67,9 +82,9 @@
         app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
 
         <EditText
-            android:id="@+id/searchMenuList"
+            android:id="@+id/searchMenuInput"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:ems="10"
             android:hint="Search Menu"
             android:inputType="textPersonName"

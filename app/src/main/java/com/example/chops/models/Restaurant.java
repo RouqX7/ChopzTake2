@@ -1,8 +1,11 @@
 package com.example.chops.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 
-public class Restaurant {
+public class Restaurant implements Parcelable {
     private String id;
     private  String location;
     private double rating;
@@ -36,6 +39,46 @@ public class Restaurant {
         this.dishes = dishes;
         this.name = name;
     }
+
+    protected Restaurant(Parcel in) {
+        id = in.readString();
+        location = in.readString();
+        rating = in.readDouble();
+        image = in.readString();
+        category = in.createStringArrayList();
+        avgTime = in.readString();
+        dishes = in.createStringArrayList();
+        name = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(location);
+        dest.writeDouble(rating);
+        dest.writeString(image);
+        dest.writeStringList(category);
+        dest.writeString(avgTime);
+        dest.writeStringList(dishes);
+        dest.writeString(name);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Restaurant> CREATOR = new Creator<Restaurant>() {
+        @Override
+        public Restaurant createFromParcel(Parcel in) {
+            return new Restaurant(in);
+        }
+
+        @Override
+        public Restaurant[] newArray(int size) {
+            return new Restaurant[size];
+        }
+    };
 
     public String getName() {
         return name;

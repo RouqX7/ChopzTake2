@@ -19,10 +19,12 @@ public interface IDatabase {
     public Food getFood(String id, ICallback callback);
     public void streamRestaurants(ICallback callback);
     public void streamFoodList(ICallback callback);
+    public void getFoodList(ICallback callback);
     public void streamOrders(ICallback callback);
     public void createOrder(Order order, ICallback callback);
     public Menu getSingleOrder(String id, ICallback callback);
     public ArrayList<Order> getAllOrders(ICallback callback);
+
 
 
 
