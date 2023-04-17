@@ -5,14 +5,12 @@ import com.example.chops.models.Customer;
 import com.example.chops.models.Food;
 import com.example.chops.models.Order;
 import com.example.chops.models.Restaurant;
-import com.example.chops.views.Menu;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-import java.sql.Array;
 import java.util.ArrayList;
 
 public class FireDatabase implements IDatabase {
@@ -54,13 +52,14 @@ public class FireDatabase implements IDatabase {
     }
 
     @Override
-    public ArrayList<Restaurant> getAllRestaurants(ICallback callback) {
-        return null;
+    public void getAllRestaurants(ICallback callback) {
+
+
     }
 
     @Override
-    public Restaurant getSingleRestaurant(String id, ICallback callback) {
-        return null;
+    public void getSingleRestaurant(String id, ICallback callback) {
+
     }
 
     @Override
@@ -161,13 +160,23 @@ public class FireDatabase implements IDatabase {
     }
 
     @Override
-    public Menu getSingleOrder(String id, ICallback callback) {
-        return null;
+    public void getUserCurrentOrder(String id, ICallback callback) {
+
     }
 
     @Override
-    public ArrayList<Order> getAllOrders(ICallback callback) {
-        return null;
+    public void getAllOrders(ICallback callback) {
+
+    }
+
+    @Override
+    public void addToCart(Food food, int quantity, ICallback callback, String uid) {
+
+    }
+
+    @Override
+    public void removeFromCart(String uid, String foodId, int quantity, ICallback callback) {
+
     }
 
     @Override
@@ -184,7 +193,7 @@ public class FireDatabase implements IDatabase {
     }
 
     @Override
-    public Food getFood(String id, ICallback callback) {
-        return null;
+    public void getFood(String id, ICallback callback) {
+
     }
 }

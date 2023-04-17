@@ -1,5 +1,7 @@
 package com.example.chops.models;
 
+import java.util.ArrayList;
+
 public class Order {
     private String id;
     private String userId;
@@ -8,17 +10,30 @@ public class Order {
     private boolean isPaid;
     private boolean isDelivered;
 
-    public Order(String id, String userId, String notes, double price, boolean isPaid, boolean isDelivered) {
+    private ArrayList<CartItem> meals;
+
+
+
+    public Order(String id) {
+        this.id = id;
+    }
+
+    public Order(String id, String userId, String notes, double price, boolean isPaid, boolean isDelivered, ArrayList<CartItem> meals) {
         this.id = id;
         this.userId = userId;
         this.notes = notes;
         this.price = price;
         this.isPaid = isPaid;
         this.isDelivered = isDelivered;
+        this.meals = meals;
     }
 
-    public Order(String id) {
-        this.id = id;
+    public ArrayList<CartItem> getMeals() {
+        return meals;
+    }
+
+    public void setMeals(ArrayList<CartItem> meals) {
+        this.meals = meals;
     }
 
     public Order() {
@@ -26,6 +41,7 @@ public class Order {
         price = 10.00;
         isPaid = true;
         isDelivered= true;
+        meals = new ArrayList<>();
     }
 
     public String getId() {
@@ -82,4 +98,6 @@ public class Order {
                 "id='" + id + '\'' +
                 '}';
     }
+
+
 }

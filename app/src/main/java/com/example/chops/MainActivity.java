@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            Intent intent = new Intent(MainActivity.this, MainViewActivity.class);
+            Intent intent = new Intent(MainActivity.this, CreateAccountActivity.class);
             startActivity(intent);
             finish();
         },1000);

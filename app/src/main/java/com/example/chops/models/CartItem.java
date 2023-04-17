@@ -4,12 +4,12 @@ public class CartItem {
     private String id;
     private long time;
     private String foodId;
-    private int quantity;
+    private int quantity = 0;
     private double totalPrice;
 
-    public CartItem(String id, long time, String foodId, int quantity, double totalPrice) {
+    public CartItem(String id, String foodId, int quantity, double totalPrice) {
         this.id = id;
-        this.time = time;
+        this.time = 0;
         this.foodId = foodId;
         this.quantity = quantity;
         this.totalPrice = totalPrice;
@@ -47,7 +47,7 @@ public class CartItem {
     }
 
     public int getQuantity() {
-        return quantity;
+        return quantity ;
     }
 
     public void setQuantity(int quantity) {
@@ -55,7 +55,7 @@ public class CartItem {
     }
 
     public double getTotalPrice() {
-        return totalPrice;
+        return totalPrice* Math.max(1,quantity);
     }
 
     public void setTotalPrice(double totalPrice){

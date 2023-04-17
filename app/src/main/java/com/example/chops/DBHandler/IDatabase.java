@@ -5,25 +5,24 @@ import com.example.chops.models.Customer;
 import com.example.chops.models.Food;
 import com.example.chops.models.Order;
 import com.example.chops.models.Restaurant;
-import com.example.chops.views.Menu;
-
-import java.util.ArrayList;
 
 public interface IDatabase {
     public void createCustomer(Customer customer, ICallback callback);
     public void retrieveCustomer(String id, ICallback callback);
     public void createRestaurant(Restaurant restaurant, ICallback callback);
-    public ArrayList<Restaurant> getAllRestaurants(ICallback callback);
-    public Restaurant getSingleRestaurant(String id,ICallback callback);
+    public void getAllRestaurants(ICallback callback);
+    public void getSingleRestaurant(String id,ICallback callback);
     public void createFood(Food food,ICallback callback);
-    public Food getFood(String id, ICallback callback);
+    public void getFood(String id, ICallback callback);
     public void streamRestaurants(ICallback callback);
     public void streamFoodList(ICallback callback);
     public void getFoodList(ICallback callback);
     public void streamOrders(ICallback callback);
     public void createOrder(Order order, ICallback callback);
-    public Menu getSingleOrder(String id, ICallback callback);
-    public ArrayList<Order> getAllOrders(ICallback callback);
+    public void getUserCurrentOrder(String id, ICallback callback);
+    public void getAllOrders(ICallback callback);
+    public void addToCart(Food food, int quantity, ICallback callback, String uid);
+    public void removeFromCart(String uid, String foodId, int quantity, ICallback callback);
 
 
 
