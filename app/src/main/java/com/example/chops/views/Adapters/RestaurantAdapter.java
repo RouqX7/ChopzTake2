@@ -84,6 +84,7 @@ public class RestaurantAdapter extends  RecyclerView.Adapter<RestaurantAdapter.V
         public Viewholder(@NonNull View itemView) {
             super(itemView);
             itemView.setOnClickListener(v->{
+                if(callback!=null)
                 callback.execute(restaurant);
             });
             if(SetUpConfig.ISADMIN ){

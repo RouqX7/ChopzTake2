@@ -1,12 +1,12 @@
 package com.example.chops.Domain;
 
-public class FastDeliveryDomain {
+public class RestaurantDomain {
     private String title;
     private String pic;
     private Double star;
     private int time;
 
-    public FastDeliveryDomain(String title, String pic, double star, int time) {
+    public RestaurantDomain(String title, String pic, double star, int time) {
         this.title = title;
         this.pic = pic;
         this.star = star;

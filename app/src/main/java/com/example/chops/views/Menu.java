@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -18,6 +19,7 @@ import com.example.chops.Config.MockData;
 import com.example.chops.Interfaces.ICallback;
 import com.example.chops.R;
 import com.example.chops.controllers.DBController;
+import com.example.chops.controllers.MenuListController;
 import com.example.chops.models.CartItem;
 import com.example.chops.models.Food;
 import com.example.chops.models.Order;
@@ -27,6 +29,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.model.FieldIndex;
 
 import java.util.ArrayList;
+import java.util.stream.IntStream;
 
 public class Menu extends AppCompatActivity {
     Restaurant restaurant = new Restaurant();
@@ -45,7 +48,6 @@ public class Menu extends AppCompatActivity {
 
 
 
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,75 +62,24 @@ public class Menu extends AppCompatActivity {
         cartFloatBtn = findViewById(R.id.cartFloatBtn);
         menuViewCartCount = findViewById(R.id.menuViewCartCount);
 
-        menuListView.setLayoutManager(new LinearLayoutManager(this));
-        menuAdapter = new MenuAdapter(new ArrayList<>(), new ICallback() {
-            @Override
-            public void execute(Object... args) {
-               if(args.length > 2){
-                   Food food = args[0] instanceof  Food ? (Food) args[0] : null;
-                   boolean isAdd = args[1] instanceof Boolean ? (Boolean) args[1] : false;
-                   int quantity = args[2] instanceof Integer ? (Integer) args[2] : 0;
-                   if(food!=null){
-                       if(isAdd){
-                           DBController.DATABASE.addToCart(food, quantity , new ICallback() {
-                               @Override
-                               public void execute(Object... args) {
-                                   if(args.length>1){
-                                       boolean success = args[1] instanceof Boolean ? (Boolean) args[1] : false;
-                                        order = args[0] instanceof Order ?(Order) args[0] : null;
-
-                                       if(success){
-                                           if(order!=null) {
-                                               calculateCart(order);
-                                           }
-                                           Utility.showToast(Menu.this,"Added to Cart");
-                                       }
-                                   }
-                               }
-                           }, MockData.MOCKCUSTOMER.getId());
-
-                       }else{
-                           DBController.DATABASE.removeFromCart( MockData.MOCKCUSTOMER.getId(), food.getId(),quantity , new ICallback() {
-                               @Override
-                               public void execute(Object... args) {
-                                   if(args.length>1){
-                                       boolean success = args[1] instanceof Boolean ? (Boolean) args[1] : false;
-                                        order = args[0] instanceof Order ?(Order) args[0] : null;
-
-                                       ;
-                                       if(success){
-                                           if(order!=null) {
-                                               calculateCart(order);
-                                           }
-                                           Utility.showToast(Menu.this,"Removed from Cart");
-                                       }
-                                   }
-                               }
-                           });
-                       }
-                       }
-               }
-
-
-            }
+        cartFloatBtn.setOnClickListener(v->{
+            Intent nextPage = new Intent(Menu.this,CartActivity.class);
+            startActivity(nextPage);
         });
-        menuListView.setAdapter(menuAdapter);
+        menuListView.setLayoutManager(new LinearLayoutManager(this));
+
         retrieveDataFromBundle();
-
-
-
 
     }
 
     private void calculateCart(Order order) {
         int counter = 0;
-        System.out.println(counter);
         for(CartItem item : order.getMeals()){
-            counter++;
+            counter+=item.getQuantity();
         }
-        menuViewCartCount.setText(counter + "");
-    }
+        menuViewCartCount.setText(String.valueOf(counter));
 
+    }
     public void changeInProgress() {
 
         if (inProgress) {
@@ -147,6 +98,18 @@ public class Menu extends AppCompatActivity {
         Bundle data = getIntent().getExtras();
         if(data != null){
             restaurant = data.getParcelable("currentRestaurant",Restaurant.class);
+            menuAdapter = MenuListController.getDefaultMenuAdapter(this, new ICallback() {
+                @Override
+                public void execute(Object... args) {
+                    if(args.length > 0){
+                        Order order = args[0] instanceof  Order ? (Order)args[0] : null;
+                        if(order!=null)
+                            calculateCart(order);
+                    }
+                }
+            },restaurant.getId());
+            menuListView.setAdapter(menuAdapter);
+
             System.out.println(restaurant);
             menuViewRestaurantName.setText(restaurant.getName());
             if(restaurant.getImage() != null){

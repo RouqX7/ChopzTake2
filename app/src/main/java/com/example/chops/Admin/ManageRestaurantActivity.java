@@ -34,7 +34,21 @@ public class ManageRestaurantActivity extends AppCompatActivity {
             startActivity(nextPage);
         });
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        restAdapter = new RestaurantAdapter(new ArrayList<>());
+        restAdapter = new RestaurantAdapter(new ArrayList<>(), new ICallback() {
+            @Override
+            public void execute(Object... args) {
+                if(args.length>0){
+                    Restaurant restaurant = args[0] instanceof Restaurant ? (Restaurant)args[0] : null;
+
+                    if(restaurant!=null){
+                        Intent nextPage = new Intent(ManageRestaurantActivity.this, CreateRestaurant.class);
+                        nextPage.putExtra("currentRestaurant",restaurant);
+                        startActivity(nextPage);
+                    }
+                }
+
+            }
+        });
         recyclerView.setAdapter(restAdapter);
         DBController.DATABASE.streamRestaurants(new ICallback() {
             @Override

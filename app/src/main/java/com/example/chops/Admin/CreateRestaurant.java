@@ -52,12 +52,10 @@ public class CreateRestaurant extends AppCompatActivity implements AdapterView.O
     
     Restaurant newRestaurant = new Restaurant(UUID.randomUUID().toString());
     
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_restaurant);
-
         nameField = findViewById(R.id.name);
         rating = findViewById(R.id.rating);
         ratingLabel = findViewById(R.id.ratingLabel);
@@ -69,7 +67,18 @@ public class CreateRestaurant extends AppCompatActivity implements AdapterView.O
         selectedDishesBtn = findViewById(R.id.select_dishes_btn);
         saveButton = findViewById(R.id.savebtn);
         addRestaurantLoader = findViewById(R.id.addRestaurantLoader);
-        
+
+        Bundle bundleData = getIntent().getExtras();
+        if(bundleData.containsKey("currentRestaurant")){
+            newRestaurant = bundleData.getParcelable("currentRestaurant", Restaurant.class);
+            nameField.setText(newRestaurant.getName());
+            rating.setProgress((int)newRestaurant.getRating());
+            ratingLabel.setText(newRestaurant.getRating()+"");
+            avgTime.setText(newRestaurant.getAvgTime());
+            location.setText(newRestaurant.getLocation());
+
+
+        }
         nameField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

@@ -3,7 +3,6 @@ package com.example.chops.views;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,15 +11,10 @@ import android.widget.TextView;
 
 import com.example.chops.DataProvider.CustomerProvider;
 import com.example.chops.Interfaces.ICallback;
-import com.example.chops.MainActivity;
 import com.example.chops.controllers.DBController;
 import com.example.chops.models.Customer;
-import com.google.firebase.auth.FirebaseAuth;
 
 import com.example.chops.R;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class LoginActivity extends AppCompatActivity {
     EditText emailEditText, passwordEditText;
@@ -33,8 +27,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        emailEditText=findViewById(R.id.email_edit_text);
-        passwordEditText=findViewById(R.id.password_edit_text);
+        emailEditText=findViewById(R.id.checkout_fname);
+        passwordEditText=findViewById(R.id.checkout_lname);
         progressBar = findViewById(R.id.progress_bar);
         loginBtn = findViewById(R.id.login_btn);
         createAccountBtnTextView = findViewById(R.id.create_account_text_view_btn);

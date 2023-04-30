@@ -13,14 +13,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MockData {
-    public static Customer MOCKCUSTOMER = new Customer("c1","cartNo-00",new Address("","",""),"","","","",0.0);
+    public static Customer MOCKCUSTOMER = new Customer("c1","cartNo-00",new Address("123 CresentView Limerick","",""),"","Guest","Doe","",0.0);
     public static Map<String, Order> MOCKCURRENTORDERS = new HashMap<>();
 
     public static Map<String,Food> MOCKFOODS = new HashMap<>();
     static {
         MOCKFOODS.put("food1", new Food(10,"Pizza", new ArrayList<>(Collections.singletonList("Pizza")),"cat_1","food1"));
-        MOCKFOODS.put("food2", new Food(10,"Pizza",new ArrayList<>(Collections.singletonList("Pizza")),"cat_2","food2"));
-        MOCKFOODS.put("food3", new Food(10,"Pizza",new ArrayList<>(Collections.singletonList("Pizza")),"cat_3","food3"));
+        MOCKFOODS.put("food2", new Food(7,"Burgers",new ArrayList<>(Collections.singletonList("Burgers")),"cat_2","food2"));
+        MOCKFOODS.put("food3", new Food(10,"Nuggets",new ArrayList<>(Collections.singletonList("Nuggets")),"cat_3","food3"));
         MOCKFOODS.put("food4", new Food(10,"Pizza",new ArrayList<>(Collections.singletonList("Pizza")),"cat_4","food4"));
         MOCKFOODS.put("food5", new Food(10,"Pizza",new ArrayList<>(Collections.singletonList("Pizza")),"cat_1","food5"));
         MOCKFOODS.put("food6", new Food(10,"Pizza",new ArrayList<>(Collections.singletonList("Pizza")),"cat_2","food6"));
@@ -31,6 +31,6 @@ public class MockData {
     static {
         String[] foodIds = MOCKFOODS.keySet().toArray(new String[4]);
         MOCKRESTAURANTS.put("rest1",new Restaurant("rest1","Limerick",9.00,"airrest",
-                new ArrayList<>(Arrays.asList(new String[]{"Pizza,Burger"})),"30",new ArrayList<String>(Arrays.asList(foodIds)),"Apache"));
+                new ArrayList<>(Arrays.asList(new String[]{"Pizza,Burger"})),"30",new ArrayList<String>(Arrays.asList(foodIds)),"Apache",3.00));
     }
 }

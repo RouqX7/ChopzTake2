@@ -22,12 +22,12 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
+        android:id="@+id/textview7"
         android:layout_width="217dp"
         android:layout_height="30dp"
-        android:id="@+id/textview7"
         android:fontFamily="cursive"
+        android:text="Waterford Village"
         android:textAlignment="center"
-        android:text="Coochie Village"
         android:textAllCaps="true"
         android:textColor="#FDFDFD"
         android:textSize="17sp"

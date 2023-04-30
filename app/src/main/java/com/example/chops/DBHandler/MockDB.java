@@ -66,6 +66,19 @@ public class MockDB implements IDatabase{
     }
 
     @Override
+    public void retrieveFoodListFromCartItems(ArrayList<CartItem> cartItems, ICallback callback, ArrayList<Food> foodList) {
+        if(cartItems.size() <= 0){
+            callback.execute(foodList, true);
+            return;
+        }
+        CartItem current = cartItems.remove(cartItems.size()-1);
+        if(MockData.MOCKFOODS.containsKey(current.getFoodId())){
+            foodList.add(MockData.MOCKFOODS.get(current.getFoodId()));
+        }
+        retrieveFoodListFromCartItems(cartItems,callback,foodList);
+    }
+
+    @Override
     public void streamOrders(ICallback callback) {
 
     }
@@ -77,7 +90,7 @@ public class MockDB implements IDatabase{
 
     @Override
     public void getUserCurrentOrder(String id, ICallback callback) {
-
+        callback.execute(MockData.MOCKCURRENTORDERS.get(id));
     }
 
     @Override
@@ -86,14 +99,14 @@ public class MockDB implements IDatabase{
     }
 
     @Override
-    public void addToCart(Food food, int quantity, ICallback callback, String uid) {
+    public void addToCart(Food food, int quantity, ICallback callback, String uid, String restaurantId) {
         Order order;
         if(MockData.MOCKCURRENTORDERS.containsKey(uid)){
            ArrayList<CartItem> meals =  new ArrayList<>(MockData.MOCKCURRENTORDERS.get(uid).getMeals());
            boolean updated = false;
 
            for(CartItem c : meals){
-               if(c.getId().equals(food.getId())){
+               if(c.getFoodId().equals(food.getId())){
                    c.setQuantity(quantity);
                    updated = true;
                }
@@ -106,9 +119,11 @@ public class MockDB implements IDatabase{
            MockData.MOCKCURRENTORDERS.get(uid).setMeals(meals);
            order = MockData.MOCKCURRENTORDERS.get(uid);
         }else{
-             order = new Order(UUID.randomUUID().toString(),uid,"",0,false,false,new ArrayList<>());
+             order = new Order(UUID.randomUUID().toString(),uid,"",0,false,false,restaurantId,new ArrayList<>());
+
             CartItem newItem = new CartItem(UUID.randomUUID().toString(),food.getId(),1,food.getPrice());
             order.getMeals().add(newItem);
+            System.out.println("New MEALS->>"+order.getMeals());
             MockData.MOCKCURRENTORDERS.put(uid,order);
 
         }
@@ -123,11 +138,11 @@ public class MockDB implements IDatabase{
             ArrayList<CartItem> newMeals = new ArrayList<>();
             boolean updated = false;
             for(CartItem c : meals){
-                if(c.getId().equals(foodId)){
-                    if(c.getQuantity() > 1){
+                if(c.getFoodId().equals(foodId)){
+                    System.out.println("Food to remove: "+foodId+" ~ Current Quantity: "+c.getQuantity());
                         c.setQuantity(quantity);
+                    System.out.println("Quantity: "+c.getQuantity());
                         newMeals.add(c);
-                    }
                 }else{
                     newMeals.add(c);
                 }
@@ -139,5 +154,14 @@ public class MockDB implements IDatabase{
         }
 
         callback.execute(order,true);
+    }
+
+    @Override
+    public void retrieveCart(String uid, ICallback callback) {
+        Order order  = new Order();
+        if(MockData.MOCKCURRENTORDERS.get(uid)!=null){
+            order = MockData.MOCKCURRENTORDERS.get(uid);
+        }
+        callback.execute(order, true);
     }
 }

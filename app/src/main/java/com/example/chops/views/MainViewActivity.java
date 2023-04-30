@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -72,10 +73,8 @@ public class MainViewActivity extends AppCompatActivity  implements NavigationBa
                         .commit();
                 return true;
             case R.id.cart:
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.flFragment, cartFragment)
-                        .commit();
+                Intent cartPage = new Intent(MainViewActivity.this, CartActivity.class);
+                startActivity(cartPage);
                 return true;
         }
         return false;

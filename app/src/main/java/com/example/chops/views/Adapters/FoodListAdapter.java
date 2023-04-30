@@ -5,7 +5,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,7 +13,6 @@ import com.bumptech.glide.Glide;
 import com.example.chops.Config.SetUpConfig;
 import com.example.chops.Interfaces.ICallback;
 import com.example.chops.R;
-import com.example.chops.models.Food;
 import com.example.chops.models.Food;
 
 import java.util.ArrayList;

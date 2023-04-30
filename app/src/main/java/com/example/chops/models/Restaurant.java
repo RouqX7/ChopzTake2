@@ -9,6 +9,7 @@ public class Restaurant implements Parcelable {
     private String id;
     private  String location;
     private double rating;
+    private double deliveryCharge;
     private String image;
     private ArrayList<String> category;
     private String avgTime;
@@ -29,7 +30,7 @@ public class Restaurant implements Parcelable {
         location = "";
     }
 
-    public Restaurant(String id, String location, double rating, String image, ArrayList<String> category, String avgTime, ArrayList<String> dishes, String name) {
+    public Restaurant(String id, String location, double rating, String image, ArrayList<String> category, String avgTime, ArrayList<String> dishes, String name, double deliveryCharge) {
         this.id = id;
         this.location = location;
         this.rating = rating;
@@ -38,6 +39,15 @@ public class Restaurant implements Parcelable {
         this.avgTime = avgTime;
         this.dishes = dishes;
         this.name = name;
+        this.deliveryCharge = deliveryCharge;
+    }
+
+    public double getDeliveryCharge() {
+        return deliveryCharge;
+    }
+
+    public void setDeliveryCharge(double deliveryCharge) {
+        this.deliveryCharge = deliveryCharge;
     }
 
     protected Restaurant(Parcel in) {

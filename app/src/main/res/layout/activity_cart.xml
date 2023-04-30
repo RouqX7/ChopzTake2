@@ -1,42 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".views.Fragments.CartFragment">
 
     <ScrollView
+        android:id="@+id/scrollView3"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <TextView
-                android:id="@+id/cartView"
+                android:id="@+id/cartText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textStyle="bold"
                 android:layout_marginTop="32dp"
-                android:textSize="28sp"
-                android:textColor="#ff3d00"
+                android:text="My Cart"
                 android:textAlignment="center"
-                android:text="My Cart" />
+                android:textColor="#ff3d00"
+                android:textSize="28sp"
+                android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@id/cartView"
+                android:id="@+id/cartView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="4dp"
-                android:layout_marginStart="16dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -44,18 +46,19 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:text="Items Total:"
                     android:textColor="@color/black"
                     android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:text="Items Total:" />
+                    android:textStyle="bold" />
+
                 <TextView
                     android:id="@+id/itemsTotalFee"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="$0"
                     android:textColor="@color/black"
-                    android:textStyle="bold"
                     android:textSize="18sp"
-                    android:text="$0" />
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
@@ -121,16 +124,29 @@
                 android:id="@+id/checkOutText"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
+                android:layout_margin="16dp"
                 android:background="@drawable/purple_button"
+                android:gravity="center"
+                android:text="Check Out"
                 android:textColor="@color/white"
                 android:textSize="25sp"
-                android:textStyle="bold"
-                android:layout_margin="16dp"
-                android:gravity="center"
-                android:text="Check Out" />
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/emptyTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="353dp"
+                android:layout_marginRight="353dp"
+                android:text="Your Cart is Empty"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/checkOutText" />
 
 
         </LinearLayout>
     </ScrollView>
 
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

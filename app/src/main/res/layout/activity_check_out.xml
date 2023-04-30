@@ -6,35 +6,18 @@
     android:layout_height="match_parent"
     android:layout_marginVertical="16dp"
     android:layout_marginHorizontal="32dp"
-    tools:context=".views.CreateAccountActivity">
-
-    <ImageView
-        android:layout_width="128dp"
-        android:layout_height="128dp"
-        android:src="@drawable/signupppp"
-        android:id="@+id/sign_up_icon"
-        android:layout_centerHorizontal="true"
-        android:layout_marginVertical="32dp" />
+    tools:context=".views.CheckOutActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/sign_up_icon"
         android:id="@+id/hellotext"
         android:orientation="vertical">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Hello "
-            android:textStyle="bold"
-            android:textSize="36sp"
-            android:textColor="@color/black" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Let's get started "
+            android:text="Checkout "
             android:textStyle="bold"
             android:textSize="36sp"
             android:textColor="@color/black" />
@@ -51,44 +34,65 @@
         android:orientation="vertical">
 
         <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:id="@+id/checkout_fname"
-            android:hint="Email id"
-            android:inputType="textEmailAddress"
-            android:textSize="20sp"
-            android:background="@drawable/rounded_corner"
-            android:padding="16dp"
-            android:layout_marginTop="12dp"
-            />
-
-        <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/rounded_corner"
+            android:hint="First Name "
+            android:inputType="text|textEmailAddress"
+            android:padding="16dp"
+            android:textSize="20sp" />
+
+        <EditText
             android:id="@+id/checkout_lname"
-            android:hint="Password "
-            android:inputType="textPassword"
-            android:textSize="20sp"
-            android:background="@drawable/rounded_corner"
-            android:padding="16dp"
-            android:layout_marginTop="12dp"
-            />
-
-        <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/checkout_address"
-            android:hint=" Confirm Password "
-            android:inputType="textPassword"
-            android:textSize="20sp"
-            android:background="@drawable/rounded_corner"
-            android:padding="16dp"
             android:layout_marginTop="12dp"
-            />
+            android:background="@drawable/rounded_corner"
+            android:hint="Last Name "
+            android:inputType="text"
+            android:padding="16dp"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/checkout_phoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/rounded_corner"
+            android:hint=" Phone Number"
+            android:inputType="phone"
+            android:padding="16dp"
+            android:textSize="20sp" />
+
+
+        <EditText
+            android:id="@+id/checkout_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/rounded_corner"
+            android:hint=" Address"
+            android:inputType="textPostalAddress"
+            android:padding="16dp"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/checkout_notes"
+            android:layout_width="match_parent"
+            android:layout_height="195dp"
+            android:layout_marginTop="12dp"
+            android:layout_gravity="top"
+            android:background="@drawable/rounded_corner"
+            android:hint=" Leave a note about your order"
+            android:padding="16dp"
+            android:textSize="20sp" />
+
         <com.google.android.material.button.MaterialButton
             android:layout_width="match_parent"
             android:layout_height="64dp"
-            android:text="Create Account"
+            android:text="Pay"
             android:layout_marginTop="12dp"
             android:textSize="16sp"
             android:id="@+id/checkout_pay"
@@ -102,37 +106,6 @@
             android:visibility="gone"
             android:layout_marginTop="12dp" />
 
-
-
-
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/form_layout"
-        android:orientation="vertical"
-        android:gravity="center" >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Already have an account" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:clickable="true"
-            android:id="@+id/login_text_view_btn"
-            android:text="Login" />
-
-
-
-    </LinearLayout>
-
-
-
-
 
 </RelativeLayout>

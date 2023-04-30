@@ -32,10 +32,10 @@ public class CreateAccountActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_account);
 
-        emailEditText=findViewById(R.id.email_edit_text);
-        passwordEditText=findViewById(R.id.password_edit_text);
-        confirmPasswordEditText = findViewById(R.id.confirm_password_edit_text);
-        createAccountBtn = findViewById(R.id.create_account_btn);
+        emailEditText=findViewById(R.id.checkout_fname);
+        passwordEditText=findViewById(R.id.checkout_lname);
+        confirmPasswordEditText = findViewById(R.id.checkout_address);
+        createAccountBtn = findViewById(R.id.checkout_pay);
         progressBar = findViewById(R.id.progress_bar);
         loginBtnTextView = findViewById(R.id.login_text_view_btn);
 

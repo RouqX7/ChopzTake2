@@ -1,6 +1,7 @@
 package com.example.chops.DBHandler;
 
 import com.example.chops.Interfaces.ICallback;
+import com.example.chops.models.CartItem;
 import com.example.chops.models.Customer;
 import com.example.chops.models.Food;
 import com.example.chops.models.Order;
@@ -123,6 +124,11 @@ public class FireDatabase implements IDatabase {
     }
 
     @Override
+    public void retrieveFoodListFromCartItems(ArrayList<CartItem> cartItems, ICallback callback, ArrayList<Food> foodList) {
+
+    }
+
+    @Override
     public void streamOrders(ICallback callback) {
         {
             final CollectionReference ref = db.collection("Orders");
@@ -170,12 +176,17 @@ public class FireDatabase implements IDatabase {
     }
 
     @Override
-    public void addToCart(Food food, int quantity, ICallback callback, String uid) {
+    public void addToCart(Food food, int quantity, ICallback callback, String uid, String restaurantId) {
 
     }
 
     @Override
     public void removeFromCart(String uid, String foodId, int quantity, ICallback callback) {
+
+    }
+
+    @Override
+    public void retrieveCart(String uid, ICallback callback) {
 
     }
 

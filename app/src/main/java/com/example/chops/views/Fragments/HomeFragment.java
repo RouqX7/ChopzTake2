@@ -31,18 +31,10 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 
 public class HomeFragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -53,11 +45,10 @@ public class HomeFragment extends Fragment {
     private RestaurantAdapter restAdapter;
     private RecyclerView recyclerViewCategory, recyclerViewFastList;
 
-    ImageView imageView;
-    TextView textView;
-    TextView addressText;
-    FirebaseAuth firebaseAuth;
-    FirebaseUser currentUser;
+    ArrayList<Restaurant> restaurants = new ArrayList<>();
+    private String filter = "all";
+
+    TextView filter_result;
     @Override
     public View onCreateView(LayoutInflater inflater,  ViewGroup container,
                               Bundle savedInstanceState) {
@@ -68,6 +59,8 @@ public class HomeFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false);
         recyclerViewFastList=v.findViewById(R.id.view2);
         recyclerViewFastList.setLayoutManager(linearLayoutManager);
+        filter_result = v.findViewById(R.id.filter_result);
+        filter_result.setText("Showing All");
         restAdapter = new RestaurantAdapter(new ArrayList<>(), new ICallback() {
             @Override
             public void execute(Object... args) {
@@ -94,7 +87,7 @@ public class HomeFragment extends Fragment {
         DBController.DATABASE.streamRestaurants(new ICallback() {
             @Override
             public void execute(Object... args) {
-                ArrayList<Restaurant> restaurants = new ArrayList<>();
+                restaurants = new ArrayList<>();
                 if(args.length > 1){
                     restaurants = args[0] instanceof ArrayList ? (ArrayList) args[0] : new ArrayList<>();
                     boolean success = args[1] instanceof Boolean ? (Boolean) args[1] : false;
@@ -102,7 +95,7 @@ public class HomeFragment extends Fragment {
 
                     if(success){
                         System.out.println("RESTAURANT:::___>" + restaurants);
-                        restAdapter.updateRestaurants(restaurants);
+                        restAdapter.updateRestaurants(filter.equals("all") ? restaurants : new ArrayList<>(restaurants.stream().filter(res->res.getCategory().contains(filter)).collect(Collectors.toList())));
                     }
                 }
             }
@@ -111,14 +104,31 @@ public class HomeFragment extends Fragment {
     }
 
     public void  recyclerViewCategory(View v){
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(),
+                LinearLayoutManager.HORIZONTAL,false);
         recyclerViewCategory=v.findViewById(R.id.view1);
         recyclerViewCategory.setLayoutManager(linearLayoutManager);
 
-        ArrayList<CategoryDomain> categoryList = new ArrayList<>(Arrays.asList(Defaults.defaultFoodCatagories));
+        ArrayList<CategoryDomain> categoryList = new ArrayList<>
+                (Arrays.asList(Defaults.defaultFoodCatagories));
 
-        adapter = new CategoryAdapter(categoryList);
+        adapter = new CategoryAdapter(categoryList, new ICallback() {
+            @Override
+            public void execute(Object... args) {
+                if(args.length > 0){
+                    CategoryDomain cat = args[0] instanceof CategoryDomain ? (CategoryDomain) args[0] : null;
+
+                    if(cat != null){
+                        filter = cat.getTitle();
+                        ArrayList<Restaurant> rests = filter.equals("all") ? restaurants : new ArrayList<>(restaurants.stream().filter(res->res.getCategory().contains(filter)).collect(Collectors.toList()));
+                        restAdapter.updateRestaurants(rests);
+                        filter_result.setText(rests.size()+ " Restaurant Found for " + filter);
+                    }
+                }
+            }
+        });
         recyclerViewCategory.setAdapter(adapter);
+
 
 
     }

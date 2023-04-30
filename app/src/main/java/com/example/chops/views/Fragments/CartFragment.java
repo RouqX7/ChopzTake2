@@ -46,7 +46,7 @@ public class CartFragment extends Fragment {
 
     private void cartRecyclerViewList(View v) {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        cartRecyclerViewList = v.findViewById(R.id.cartView);
+        cartRecyclerViewList = v.findViewById(R.id.cartText);
         cartRecyclerViewList.setLayoutManager(linearLayoutManager);
         cartAdapter = new RestaurantAdapter(new ArrayList<>(), new ICallback() {
             @Override

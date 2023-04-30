@@ -8,6 +8,7 @@ import java.util.Map;
 
 public class Defaults {
     public static CategoryDomain[] defaultFoodCatagories = {
+      new CategoryDomain("all","cat_4"),
       new CategoryDomain("Pizza","cat_1"),
       new CategoryDomain("Burgers", "cat_2"),
       new CategoryDomain("Chinese","cat_3"),

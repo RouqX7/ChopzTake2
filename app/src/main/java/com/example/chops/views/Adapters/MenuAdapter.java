@@ -30,17 +30,41 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.Viewholder> {
     public Map<String, Integer> foodQuantity = new HashMap<>();
     public ICallback callback;
 
+    public boolean hideCartModify;
+
     public MenuAdapter(ArrayList<Food> foods){
         this.foods = foods;
+        this.hideCartModify = false;
     }
+
+    private void defaultQuantities(ArrayList<Food> foods) {
+
+        for(Food f : foods){
+            foodQuantity.put(f.getId(),0);
+        }
+    }
+
     public MenuAdapter(ArrayList<Food> foods,ICallback callback){
         this.foods = foods;
         this.callback = callback;
+        this.hideCartModify = false;
+    }
+    public MenuAdapter(ArrayList<Food> foods,ICallback callback,boolean hideCartModify){
+        this.foods = foods;
+        this.callback = callback;
+        this.hideCartModify = hideCartModify;
     }
     public void updateFoods(ArrayList<Food> foods){
         this.foods.clear();
         this.foods.addAll(foods);
-        notifyDataSetChanged();
+        notifyItemRangeChanged(0,this.foods.size());
+    }
+    public void updateFoods(ArrayList<Food> foods, Map<String, Integer> foodQuantity){
+        this.foods.clear();
+        this.foods.addAll(foods);
+        this.foodQuantity = foodQuantity;
+        System.out.println("UF->"+this.foodQuantity);
+        notifyItemRangeChanged(0,this.foods.size());
     }
     public  void  addFood(Food food){
         int insertAt = Math.max(0,foods.size());
@@ -57,21 +81,19 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.Viewholder> {
     @Override
     public MenuAdapter.Viewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_menu_item,parent,false);
-
+        defaultQuantities(foods);
         return new MenuAdapter.Viewholder(inflate);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MenuAdapter.Viewholder holder, int position) {
         holder.menuItemText.setText(foods.get(position).getName());
-        holder.foodPrice.setText("$"+foods.get(position).getPrice());
+        holder.foodPrice.setText("€"+foods.get(position).getPrice());
         holder.food = foods.get(position);
 
-        for(Food f : foods){
-            foodQuantity.put(f.getId(),0);
-        }
-        System.out.println("FoodQ: "+this.foodQuantity);
-        holder.foodQuantity = this.foodQuantity;
+
+        System.out.println("FoodQ: "+foodQuantity);
+        holder.foodQuantity = foodQuantity;
         if(foods.get(position).getImage()!=null){
             int drawableResourceId = holder.itemView.getContext().getResources().getIdentifier(foods.get(position).getImage(),"drawable",holder.itemView.getContext().getPackageName());
             Glide.with(holder.itemView.getContext())
@@ -119,6 +141,15 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.Viewholder> {
             menuItemText = itemView.findViewById(R.id.menuItemText);
             currentQuantityInCart = itemView.findViewById(R.id.currentQuantityInCart);
 
+            addToCartBtn.setVisibility(hideCartModify ? View.GONE : View.VISIBLE);
+            removeFromCartBtn.setVisibility(hideCartModify ? View.GONE : View.VISIBLE);
+            currentQuantityInCart.setVisibility(hideCartModify ? View.GONE : View.VISIBLE);
+
+            if(food != null){
+                if(foodQuantity.containsKey(food.getId()))
+                    currentQuantityInCart.setText(foodQuantity.get(food.getId()).toString());
+
+            }
 
             addToCartBtn.setOnClickListener((v)->{
                 System.out.println("FOOOOOOOD-->"+foodQuantity);

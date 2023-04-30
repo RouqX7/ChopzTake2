@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.chops.Domain.FastDeliveryDomain;
+import com.example.chops.Domain.RestaurantDomain;
 import com.example.chops.R;
 
 import java.util.ArrayList;
@@ -18,10 +18,10 @@ import java.util.ArrayList;
 
 public class FastDeliveryAdapter extends  RecyclerView.Adapter<FastDeliveryAdapter.Viewholder>{
 
-    ArrayList<FastDeliveryDomain> fastDeliveryDomains;
+    ArrayList<RestaurantDomain> restaurantDomains;
 
-    public FastDeliveryAdapter(ArrayList<FastDeliveryDomain> fastDeliveryDomains){
-        this.fastDeliveryDomains = fastDeliveryDomains;
+    public FastDeliveryAdapter(ArrayList<RestaurantDomain> restaurantDomains){
+        this.restaurantDomains = restaurantDomains;
     }
     @NonNull
     @Override
@@ -33,11 +33,11 @@ public class FastDeliveryAdapter extends  RecyclerView.Adapter<FastDeliveryAdapt
 
     @Override
     public void onBindViewHolder(@NonNull Viewholder holder, int position) {
-        holder.time.setText(fastDeliveryDomains.get(position).getTime()+" min");
-        holder.title.setText(fastDeliveryDomains.get(position).getTitle());
-        holder.star.setText(String.valueOf(fastDeliveryDomains.get(position).getStar()));
+        holder.time.setText(restaurantDomains.get(position).getTime()+" min");
+        holder.title.setText(restaurantDomains.get(position).getTitle());
+        holder.star.setText(String.valueOf(restaurantDomains.get(position).getStar()));
 
-        int drawableResourceId = holder.itemView.getContext().getResources().getIdentifier(fastDeliveryDomains.get(position).getPic(),"drawable",holder.itemView.getContext().getPackageName());
+        int drawableResourceId = holder.itemView.getContext().getResources().getIdentifier(restaurantDomains.get(position).getPic(),"drawable",holder.itemView.getContext().getPackageName());
         Glide.with(holder.itemView.getContext())
                 .load(drawableResourceId)
                 .into(holder.pic);
@@ -46,7 +46,7 @@ public class FastDeliveryAdapter extends  RecyclerView.Adapter<FastDeliveryAdapt
 
     @Override
     public int getItemCount() {
-        return fastDeliveryDomains.size();
+        return restaurantDomains.size();
     }
 
     public class Viewholder extends RecyclerView.ViewHolder{

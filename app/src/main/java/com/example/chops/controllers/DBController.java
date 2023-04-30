@@ -8,5 +8,5 @@ import com.example.chops.DBHandler.MockDB;
 
 public class DBController {
     public static IAuth AUTHENTICATION = new FireAuth();
-    public static IDatabase DATABASE = new MockDB();
+    public static IDatabase DATABASE = new FireDatabase();
 }
