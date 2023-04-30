@@ -10,7 +10,7 @@ public class CartController {
         System.out.println("CartItems: "+ cartItems);
         double price = 0.0;
         for(CartItem item : cartItems){
-            price += item.getTotalPrice();
+            price += item.getTotalPrice()*item.getQuantity();
         }
         System.out.println("Price "+ price);
         return price;

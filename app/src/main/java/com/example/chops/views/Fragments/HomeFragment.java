@@ -20,7 +20,9 @@ import com.example.chops.Config.Defaults;
 import com.example.chops.Domain.CategoryDomain;
 import com.example.chops.Interfaces.ICallback;
 import com.example.chops.R;
+import com.example.chops.controllers.CustomerController;
 import com.example.chops.controllers.DBController;
+import com.example.chops.models.Customer;
 import com.example.chops.models.Restaurant;
 import com.example.chops.views.Adapters.CategoryAdapter;
 import com.example.chops.views.Adapters.RestaurantAdapter;
@@ -47,7 +49,7 @@ public class HomeFragment extends Fragment {
 
     ArrayList<Restaurant> restaurants = new ArrayList<>();
     private String filter = "all";
-
+    private  TextView deliveryAddress;
     TextView filter_result;
     @Override
     public View onCreateView(LayoutInflater inflater,  ViewGroup container,
@@ -61,6 +63,8 @@ public class HomeFragment extends Fragment {
         recyclerViewFastList.setLayoutManager(linearLayoutManager);
         filter_result = v.findViewById(R.id.filter_result);
         filter_result.setText("Showing All");
+        deliveryAddress = v.findViewById(R.id.address);
+        deliveryAddress.setText(CustomerController.GET_CURRENT_USER.getAddress()!=null ? CustomerController.GET_CURRENT_USER.getAddress().getStreet() : "--");
         restAdapter = new RestaurantAdapter(new ArrayList<>(), new ICallback() {
             @Override
             public void execute(Object... args) {

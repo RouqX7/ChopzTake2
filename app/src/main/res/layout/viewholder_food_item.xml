@@ -6,7 +6,7 @@
 
     <ImageView
         android:id="@+id/foodImage"
-        android:layout_width="50dp"
+        android:layout_width="15dp"
         android:layout_height="50dp"
         android:layout_marginHorizontal="5dp"
         android:layout_weight="0"

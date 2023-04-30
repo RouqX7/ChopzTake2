@@ -13,7 +13,7 @@ public class Restaurant implements Parcelable {
     private String image;
     private ArrayList<String> category;
     private String avgTime;
-    private ArrayList<String> dishes;
+    private ArrayList<String> dishes = new ArrayList<>();
     private String name;
 
     public Restaurant(String id) {

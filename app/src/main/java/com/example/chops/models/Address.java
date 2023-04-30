@@ -14,6 +14,9 @@ public class Address {
     public Address(String street) {
         this.street = street;
     }
+    public Address(){
+
+    }
 
     public String getStreet() {
         return street;

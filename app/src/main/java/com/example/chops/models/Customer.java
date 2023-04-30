@@ -1,4 +1,5 @@
 package com.example.chops.models;
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class Customer {
@@ -9,7 +10,28 @@ public class Customer {
     private String firstName;
     private String lastName;
     private String phoneNo;
+    private ArrayList<String> orders = new ArrayList<>();
     private double money = 1000;
+
+    public ArrayList<String> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(ArrayList<String> orders) {
+        this.orders = orders;
+    }
+
+    public Customer(String id, String cartId, Address address, String email, String firstName, String lastName, String phoneNo, ArrayList<String> orders, double money) {
+        this.id = id;
+        this.cartId = cartId;
+        this.address = address;
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNo = phoneNo;
+        this.orders = orders;
+        this.money = money;
+    }
 
     public Customer(String id, String cartId, Address address, String email, String firstName, String lastName, String phoneNo, double money) {
         this.id = id;
@@ -86,7 +108,7 @@ public class Customer {
     }
 
     public void setMoney(double money) {
-        this.money = money;
+        this.money += money;
     }
 
     @Override

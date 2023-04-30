@@ -11,6 +11,7 @@ public interface IAuth {
     public Task<AuthResult> signInWithEmailAndPassword(String email, String password);
     public void signInWithEmailAndPassword(String email, String password, ICallback callback);
     public String getCurrentUser();
+    public void signOut();
 
 }
 

@@ -1,5 +1,10 @@
 package com.example.chops.views;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.utils.widget.ImageFilterView;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,6 +23,7 @@ import com.bumptech.glide.Glide;
 import com.example.chops.Config.MockData;
 import com.example.chops.Interfaces.ICallback;
 import com.example.chops.R;
+import com.example.chops.controllers.CustomerController;
 import com.example.chops.controllers.DBController;
 import com.example.chops.controllers.MenuListController;
 import com.example.chops.models.CartItem;
@@ -29,6 +35,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.model.FieldIndex;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.IntStream;
 
 public class Menu extends AppCompatActivity {
@@ -61,10 +69,22 @@ public class Menu extends AppCompatActivity {
         menuListViewLayout = findViewById(R.id.menuResultView);
         cartFloatBtn = findViewById(R.id.cartFloatBtn);
         menuViewCartCount = findViewById(R.id.menuViewCartCount);
+        ActivityResultLauncher<Intent> nextPageLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if(result.getResultCode() == RESULT_OK){
+                            assert result.getData() != null;
+                            System.out.println(result.getData().getExtras().getString("tester")+"<<<<<<");
+                            onActivityResultCall(result.getResultCode(),result.getData());
+                        }
 
+                    }
+                });
         cartFloatBtn.setOnClickListener(v->{
             Intent nextPage = new Intent(Menu.this,CartActivity.class);
-            startActivity(nextPage);
+            nextPageLauncher.launch(nextPage);
         });
         menuListView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -93,51 +113,73 @@ public class Menu extends AppCompatActivity {
         }
     }
 
+
+    protected void onActivityResultCall(int resultCode, @Nullable Intent data) {
+
+            retrieveDataFromBundle();
+
+    }
     protected void retrieveDataFromBundle() {
         System.out.println("____-_____________");
         Bundle data = getIntent().getExtras();
-        if(data != null){
-            restaurant = data.getParcelable("currentRestaurant",Restaurant.class);
+        if(data != null) {
+            restaurant = data.getParcelable("currentRestaurant", Restaurant.class);
             menuAdapter = MenuListController.getDefaultMenuAdapter(this, new ICallback() {
                 @Override
                 public void execute(Object... args) {
-                    if(args.length > 0){
-                        Order order = args[0] instanceof  Order ? (Order)args[0] : null;
-                        if(order!=null)
+                    if (args.length > 0) {
+                        Order order = args[0] instanceof Order ? (Order) args[0] : null;
+                        if (order != null)
                             calculateCart(order);
                     }
                 }
-            },restaurant.getId());
+            }, restaurant.getId());
             menuListView.setAdapter(menuAdapter);
 
             System.out.println(restaurant);
             menuViewRestaurantName.setText(restaurant.getName());
-            if(restaurant.getImage() != null){
-                int drawableResourceId = getResources().getIdentifier(restaurant.getImage(),"drawable",getPackageName());
+            if (restaurant.getImage() != null) {
+                int drawableResourceId = getResources().getIdentifier(restaurant.getImage(), "drawable", getPackageName());
                 Glide.with(this)
                         .load(drawableResourceId)
                         .into(menuViewRestaurantImage);
             }
 
+            changeInProgress();
+            DBController.DATABASE.retrieveCart(CustomerController.GET_CURRENT_USER.getId(), new ICallback() {
+                @Override
+                public void execute(Object... args) {
+                    if (args.length > 0) {
+                        Order order = args[0] instanceof Order ? (Order) args[0] : new Order();
 
-            System.out.println(restaurant.getDishes());
-            for(String foodId : restaurant.getDishes()){
-                changeInProgress();
-                DBController.DATABASE.getFood(foodId, new ICallback() {
-                    @Override
-                    public void execute(Object... args) {
-                        if(args.length > 0){
-                            Food food = args[0] instanceof  Food ? (Food)args[0] : null;
-                            System.out.println("FOOD ==> "+food);
-                            if(food !=null){
-                                menuAdapter.addFood(food);
+                        Map<String, Integer> foodQuantities = new HashMap<>();
+                        if (order != null) {
+                            System.out.println(restaurant.getDishes());
+                            for (CartItem item : order.getMeals()) {
+                                foodQuantities.put(item.getFoodId(), item.getQuantity());
                             }
+                            ArrayList<String> cartItems =new ArrayList<>(restaurant.getDishes());
+                            DBController.DATABASE.retrieveFoodListFromIds(cartItems, new ICallback() {
+                                @Override
+                                public void execute(Object... args) {
+                                    if (args.length > 0) {
+                                        ArrayList<Food> foods = args[0] instanceof ArrayList ? (ArrayList<Food>) args[0] : new ArrayList<>();
 
+                                        if (!foods.isEmpty()) {
+                                            System.out.println("Successful: " + foods);
+                                            menuAdapter.updateFoods(foods, foodQuantities);
+                                            changeInProgress();
+                                            calculateCart(order);
+                                        } else {
+                                            System.out.println("Something went really wrong!!");
+                                        }
+                                    }
+                                }
+                            }, new ArrayList<>());
                         }
-                        changeInProgress();
                     }
-                });
-            }
+                }});
+
 //            DBController.DATABASE.getFoodList(new ICallback() {
 //                @Override
 //                public void execute(Object... args) {

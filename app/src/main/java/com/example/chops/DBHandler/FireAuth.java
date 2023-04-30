@@ -62,4 +62,9 @@ public class FireAuth implements IAuth {
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         return firebaseUser != null ? firebaseUser.getUid() : null;
     }
+
+    @Override
+    public void signOut() {
+        firebaseAuth.signOut();
+    }
 }

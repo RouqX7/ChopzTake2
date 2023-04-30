@@ -92,11 +92,11 @@ public class CartItem implements Parcelable {
     }
 
     public double getTotalPrice() {
-        return totalPrice* Math.max(1,quantity);
+        return totalPrice;
     }
 
     public void setTotalPrice(double totalPrice){
-
+        this.totalPrice=totalPrice;
     }
 
     @Override

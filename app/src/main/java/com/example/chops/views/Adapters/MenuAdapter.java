@@ -81,7 +81,9 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.Viewholder> {
     @Override
     public MenuAdapter.Viewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_menu_item,parent,false);
-        defaultQuantities(foods);
+        if(foodQuantity.isEmpty()) {
+            defaultQuantities(foods);
+        }
         return new MenuAdapter.Viewholder(inflate);
     }
 
@@ -90,7 +92,11 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.Viewholder> {
         holder.menuItemText.setText(foods.get(position).getName());
         holder.foodPrice.setText("€"+foods.get(position).getPrice());
         holder.food = foods.get(position);
+        if(holder.food != null){
+            if(foodQuantity.containsKey(holder.food.getId()))
+                holder.currentQuantityInCart.setText(foodQuantity.get(holder.food.getId()).toString());
 
+        }
 
         System.out.println("FoodQ: "+foodQuantity);
         holder.foodQuantity = foodQuantity;
@@ -143,7 +149,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.Viewholder> {
 
             addToCartBtn.setVisibility(hideCartModify ? View.GONE : View.VISIBLE);
             removeFromCartBtn.setVisibility(hideCartModify ? View.GONE : View.VISIBLE);
-            currentQuantityInCart.setVisibility(hideCartModify ? View.GONE : View.VISIBLE);
+            //currentQuantityInCart.setVisibility(hideCartModify ? View.GONE : View.VISIBLE);
 
             if(food != null){
                 if(foodQuantity.containsKey(food.getId()))

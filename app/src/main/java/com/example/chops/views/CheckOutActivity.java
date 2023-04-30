@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.chops.Interfaces.ICallback;
 import com.example.chops.R;
 import com.example.chops.controllers.CartController;
 import com.example.chops.controllers.CustomerController;
@@ -60,10 +61,11 @@ public class CheckOutActivity extends AppCompatActivity {
 
     private void setUpUserDetails() {
         if (customer != null) {
-            checkoutFname.setText(customer.getFirstName());
-            checkoutLname.setText(customer.getLastName());
+            checkoutFname.setText(customer.getFirstName() !=null ? customer.getFirstName() : "");
+            checkoutLname.setText(customer.getLastName() != null ? customer.getLastName() : "");
+            if(customer.getAddress()!=null)
             checkoutAddress.setText(customer.getAddress().getStreet());
-            checkoutPhone.setText(customer.getPhoneNo());
+            checkoutPhone.setText(customer.getPhoneNo() != null ? customer.getPhoneNo() : "");
         }
 
     }
@@ -75,25 +77,27 @@ public class CheckOutActivity extends AppCompatActivity {
         if (order != null) {
             checkoutPayBtn.setText("Pay €" + totalPrice);
             checkoutPayBtn.setOnClickListener(e -> {
+                DBController.DATABASE.payForOrder(order, (args)->{
+                    order.setNotes(checkoutNotes.getText().toString());
+                    if (customer == null) {
+                        String guestId = UUID.randomUUID().toString();
+                        customer = new Customer("guest_" + guestId, "guest_" + guestId, new Address(checkoutAddress.getText().toString()), "", checkoutFname.getText().toString(), checkoutLname.getText().toString(), checkoutPhone.getText().toString(), 100);
 
+                    }
+                    order.setUserId(customer.getId());
+
+                    System.out.println("CartItems: "+ order.getMeals());
+                    Intent completionPage = new Intent(CheckOutActivity.this, OrderCompletedScreen.class);
+                    completionPage.putExtra("currentOrderedRestaurant", restaurant);
+                    completionPage.putExtra("currentOrder", order);
+                    completionPage.putExtra("currentOrderTotal",totalPrice);
+                    completionPage.putParcelableArrayListExtra("currentOrderedFood", foodOrdered);
+                    setResult(Activity.RESULT_OK);
+                    startActivity(completionPage);
+                    finish();
+
+                });
                 // go to order complete screen
-                order.setNotes(checkoutNotes.getText().toString());
-                if (customer == null) {
-                    String guestId = UUID.randomUUID().toString();
-                    customer = new Customer("guest_" + guestId, "guest_" + guestId, new Address(checkoutAddress.getText().toString()), "", checkoutFname.getText().toString(), checkoutLname.getText().toString(), checkoutPhone.getText().toString(), 100);
-
-                }
-                order.setUserId(customer.getId());
-
-                System.out.println("CartItems: "+ order.getMeals());
-                        Intent completionPage = new Intent(CheckOutActivity.this, OrderCompletedScreen.class);
-                        completionPage.putExtra("currentOrderedRestaurant", restaurant);
-                        completionPage.putExtra("currentOrder", order);
-                        completionPage.putExtra("currentOrderTotal",totalPrice);
-                        completionPage.putParcelableArrayListExtra("currentOrderedFood", foodOrdered);
-                        setResult(Activity.RESULT_OK);
-                        startActivity(completionPage);
-                        finish();
 
 
             });

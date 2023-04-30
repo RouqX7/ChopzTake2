@@ -1,10 +1,15 @@
 package com.example.chops.Admin;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.utils.widget.ImageFilterButton;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -30,8 +35,12 @@ import com.example.chops.models.Restaurant;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
+import org.checkerframework.checker.units.qual.A;
+
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class CreateRestaurant extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
     EditText nameField,avgTime,location;
@@ -42,6 +51,7 @@ public class CreateRestaurant extends AppCompatActivity implements AdapterView.O
     
     TextView ratingLabel;
     Button selectedDishesBtn, saveButton;
+    ArrayList<String> selectedDishes = new ArrayList<>();
 
     ChipGroup selectedCategory;
     ArrayList<String> categoriestoIgnore = new ArrayList<>();
@@ -72,10 +82,50 @@ public class CreateRestaurant extends AppCompatActivity implements AdapterView.O
         if(bundleData.containsKey("currentRestaurant")){
             newRestaurant = bundleData.getParcelable("currentRestaurant", Restaurant.class);
             nameField.setText(newRestaurant.getName());
-            rating.setProgress((int)newRestaurant.getRating());
-            ratingLabel.setText(newRestaurant.getRating()+"");
+            rating.setProgress((int)newRestaurant.getRating()*10);
+            ratingLabel.setText((newRestaurant.getRating()*10)+"");
             avgTime.setText(newRestaurant.getAvgTime());
             location.setText(newRestaurant.getLocation());
+            categoriestoIgnore.addAll(newRestaurant.getCategory());
+            System.out.println("Cat to Ignore: "+ categoriestoIgnore);
+            if(newRestaurant.getDishes()!=null) {
+                selectedDishes.addAll(newRestaurant.getDishes());
+            }
+            populateChipGroup(selectedCategory, categoriestoIgnore, new ICallback() {
+                @Override
+                public void execute(Object... args) {
+                    if(args.length > 0){
+                        String s = args[0] instanceof String ? (String)args[0] : "";
+                        categoriestoIgnore.remove(s);
+                        newRestaurant.setCategory(categoriestoIgnore);
+                    }
+                }
+            });
+            DBController.DATABASE.retrieveFoodListFromIds(selectedDishes, new ICallback() {
+                @Override
+                public void execute(Object... args) {
+                    if(args.length > 0) {
+
+                        ArrayList<Food> foods = args[0] instanceof ArrayList ? (ArrayList<Food>) args[0] : new ArrayList<>();
+                        populateChipGroup(selectDishes, new ArrayList<>(foods.stream().map(food->food.getName()).collect(Collectors.toList())), new ICallback() {
+                            @Override
+                            public void execute(Object... argz) {
+                                if(argz.length > 0){
+                                    String s = argz[0] instanceof String ? (String)argz[0] : "";
+                                    System.out.println("REMOVEID -> "+s);
+                                    selectedDishes = new ArrayList<>(foods.stream().filter(food->!food.getName().equals(s)).map(f->f.getId()).collect(Collectors.toList()));
+                                    newRestaurant.setDishes(selectedDishes);
+
+
+                                }
+                            }
+                        });
+                    }
+                }
+            }, new ArrayList<>());
+
+
+
 
 
         }
@@ -154,21 +204,36 @@ public class CreateRestaurant extends AppCompatActivity implements AdapterView.O
                 ImageFilterButton restaurantImage = restaurantImageBtn[i];
                 restaurantImage = findViewById(id);
                 TextView textView = findViewById(Defaults.defaultResturantImageTexts.get(s));
+                if(s.equals(newRestaurant.getImage())){
+                    onSelectedImage(getResources().getResourceName(id), restaurantImage, textView);
+                }
                 restaurantImage.setOnClickListener(v->onSelectedImage(getResources().getResourceName(id) , v, textView));
                 i++;
             }
            
         }
-        
-        populateCategories();
-        categorySpinner.setOnItemSelectedListener(this);
 
+        populateCategories();
         categorySpinner.setOnItemSelectedListener(this);
         categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categorySpinner.setAdapter(categoryAdapter);
+        ActivityResultLauncher<Intent> nextPageLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if(result.getResultCode() == RESULT_OK){
+                            assert result.getData() != null;
+                            System.out.println(result.getData().getExtras().getString("tester")+"<<<<<<");
+                            onActivityResultCall(result.getResultCode(),result.getData());
+                        }
+
+                    }
+                });
         selectedDishesBtn.setOnClickListener(v->{
             Intent nextPage = new Intent(CreateRestaurant.this, ViewFoodActivity.class);
-            startActivity(nextPage);
+            nextPage.putStringArrayListExtra("currentlySelectedDishes", newRestaurant.getDishes()!=null ? newRestaurant.getDishes() : new ArrayList<>());
+            nextPageLauncher.launch(nextPage);
         });
         saveButton.setOnClickListener(v->{saveNewRestaurant();});
     }
@@ -178,6 +243,8 @@ public class CreateRestaurant extends AppCompatActivity implements AdapterView.O
         saveButton.setVisibility(View.GONE);
         if(newRestaurant != null){
             System.out.println(newRestaurant);
+            System.out.println(newRestaurant.getDishes());
+            System.out.println(newRestaurant.getCategory());
             DBController.DATABASE.createRestaurant(newRestaurant, new ICallback() {
                 @Override
                 public void execute(Object... args) {
@@ -198,34 +265,61 @@ public class CreateRestaurant extends AppCompatActivity implements AdapterView.O
         }
     }
     private void populateCategories(){
+
         ArrayList<String> categories = new ArrayList<String>();
+        categories.add("Select Food Category");
         for(CategoryDomain cat : Defaults.defaultFoodCatagories){
+            if(!cat.getTitle().equals("all"))
             categories.add(cat.getTitle());
         }
         if(categoryAdapter!=null){
             categoryAdapter.clear();
             categoryAdapter.addAll(categories);
-            categoryAdapter.notifyDataSetChanged();
+
         }else{
             categoryAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,categories);
         }
-        newRestaurant.setCategory(categories);
+        categoryAdapter.notifyDataSetChanged();
+    }
+    private void populateChipGroup(ChipGroup chips, ArrayList<String> titles,ICallback onClosed){
+        System.out.println("Chips to Create: "+titles);
+        chips.removeAllViews();
+        for(String s : titles){
+            Chip chip = new Chip(this);
+            chip.setText(s);
+            chips.addView(chip);
+            chip.setCloseIconVisible(true);
+            chip.setOnCloseIconClickListener(v->{
+                chips.removeView(v);
+                onClosed.execute(s);
+
+            });
+
+        }
     }
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        System.out.println("ItemSelected!!!!!");
         String item = parent.getItemAtPosition(position).toString();
-        categoriestoIgnore.add(item);
-        Chip chip = new Chip(this);
-        chip.setText(item);
-        selectedCategory.addView(chip);
-        chip.setCloseIconVisible(true);
-        populateCategories();
-        chip.setOnCloseIconClickListener(v->{
-            selectedCategory.removeView(v);
-            categoriestoIgnore.remove(item);
-            populateCategories();
+        if(position == 0){
 
-        });
+        }else{
+            categoriestoIgnore.add(item);
+            Chip chip = new Chip(this);
+            chip.setText(item);
+            selectedCategory.addView(chip);
+            chip.setCloseIconVisible(true);
+            populateCategories();
+            newRestaurant.setCategory(categoriestoIgnore);
+            chip.setOnCloseIconClickListener(v->{
+                selectedCategory.removeView(v);
+                categoriestoIgnore.remove(item);
+                newRestaurant.setCategory(categoriestoIgnore);
+                populateCategories();
+
+            });
+        }
+
 
     }
     // [..] [] []
@@ -256,11 +350,24 @@ public class CreateRestaurant extends AppCompatActivity implements AdapterView.O
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    protected void onPostResume() {
+        super.onPostResume();
+    }
+
+
+    protected void onActivityResultCall(int resultCode, @Nullable Intent data) {
+
+        System.out.println("Activity->>>>>>");
+        if(newRestaurant.getDishes() == null){
+            newRestaurant.setDishes(new ArrayList<>());
+        }
         if(resultCode==RESULT_OK){
-                ArrayList<Food> result = data.getParcelableArrayListExtra("selectedFoods", Food.class);
+                ArrayList<Food> result = data.getExtras().getParcelableArrayList("selectedFoods", Food.class);
+              selectDishes.removeAllViews();
+              newRestaurant.getDishes().clear();
+            System.out.println(result);
                 for(Food food : result){
+                    System.out.println(food.getId());
                     Chip chip = new Chip(this);
                     chip.setText(food.getName());
                     chip.setCloseIconVisible(true);

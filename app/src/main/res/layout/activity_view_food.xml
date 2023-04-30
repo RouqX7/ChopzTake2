@@ -16,17 +16,15 @@
     tools:context=".Admin.ViewFoodActivity">
 
 
-
-
-    <EditText
-        android:id="@+id/foodSearchBar"
-        android:layout_width="match_parent"
-        android:layout_height="83dp"
-        android:layout_weight="1"
-        android:ems="10"
-        android:hint="SEARCH"
-        android:inputType="textPersonName"
-        android:text="Name" />
+        <EditText
+            android:id="@+id/foodSearchBar"
+            android:layout_width="match_parent"
+            android:layout_height="83dp"
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="SEARCH"
+            android:inputType="textPersonName"
+            android:visibility="gone" />
 
         <ScrollView
             android:layout_width="match_parent"

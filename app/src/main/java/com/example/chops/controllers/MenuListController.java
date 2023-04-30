@@ -37,10 +37,10 @@ public class MenuListController {
                                         }
                                     }
                                 }
-                            }, MockData.MOCKCUSTOMER.getId(),restaurantId );
+                            }, CustomerController.GET_CURRENT_USER.getId(),restaurantId );
 
                         }else{
-                            DBController.DATABASE.removeFromCart( MockData.MOCKCUSTOMER.getId(), food.getId(),quantity , new ICallback() {
+                            DBController.DATABASE.removeFromCart( CustomerController.GET_CURRENT_USER.getId(), food.getId(),quantity , new ICallback() {
                                 @Override
                                 public void execute(Object... args) {
                                     if(args.length>1){
@@ -86,10 +86,10 @@ public class MenuListController {
                                         }
                                     }
                                 }
-                            }, MockData.MOCKCUSTOMER.getId(),restaurantId );
+                            }, CustomerController.GET_CURRENT_USER.getId(),restaurantId );
 
                         }else{
-                            DBController.DATABASE.removeFromCart( MockData.MOCKCUSTOMER.getId(), food.getId(),quantity , new ICallback() {
+                            DBController.DATABASE.removeFromCart( CustomerController.GET_CURRENT_USER.getId(), food.getId(),quantity , new ICallback() {
                                 @Override
                                 public void execute(Object... args) {
                                     if(args.length>1){

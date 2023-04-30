@@ -21,13 +21,22 @@ import java.util.ArrayList;
 public class FoodListAdapter extends  RecyclerView.Adapter<FoodListAdapter.Viewholder> {
 
     ArrayList<Food> foods;
-
+    ArrayList<String> selectedFoods = new ArrayList<>();
+    ICallback callback;
     public FoodListAdapter(ArrayList<Food> foods) {
         this.foods = foods;
     }
 
     public FoodListAdapter(ArrayList<Food> foods, ICallback callback) {
         this.foods = foods;
+        this.callback = callback;
+    }
+
+
+    public FoodListAdapter(ArrayList<Food> foods,ArrayList<String> selectedFoods, ICallback callback) {
+        this.foods = foods;
+        this.callback = callback;
+        this.selectedFoods = selectedFoods;
     }
 
     @NonNull
@@ -41,6 +50,10 @@ public class FoodListAdapter extends  RecyclerView.Adapter<FoodListAdapter.Viewh
     @Override
     public void onBindViewHolder(@NonNull Viewholder holder, int position) {
         holder.foodItem.setText(foods.get(position).getName());
+        holder.food = foods.get(position);
+        if(selectedFoods.contains(holder.food.getId())){
+            holder.foodItem.setChecked(true);
+        }
         if(foods.get(position).getImage()!=null) {
             int drawableResourceId = holder.itemView.getContext().getResources().getIdentifier(foods.get(position).getImage(), "drawable", holder.itemView.getContext().getPackageName());
             Glide.with(holder.itemView.getContext())
@@ -74,21 +87,24 @@ public class FoodListAdapter extends  RecyclerView.Adapter<FoodListAdapter.Viewh
     public class Viewholder extends RecyclerView.ViewHolder {
         CheckBox foodItem;
         ImageView foodImage;
-
+        Food food = new Food();
         public Viewholder(@NonNull View itemView) {
             super(itemView);
-//            itemView.setOnClickListener(v->{
-//
-//            });
-//            if(SetUpConfig.ISADMIN ){
-//                itemView.setOnLongClickListener(v->{
-//
-//                    return true;
-//                });
-//            }
-
             foodItem = itemView.findViewById(R.id.foodItem);
             foodImage = itemView.findViewById(R.id.foodImage);
+           // System.out.println("--> "+selectedFoods);
+
+            foodItem.setOnCheckedChangeListener((v, n)->{
+                callback.execute(food,foodItem.isChecked());
+            });
+            if(SetUpConfig.ISADMIN ){
+                itemView.setOnLongClickListener(v->{
+
+                    return true;
+                });
+            }
+
+
         }
     }
 }

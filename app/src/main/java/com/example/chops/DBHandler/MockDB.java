@@ -66,6 +66,19 @@ public class MockDB implements IDatabase{
     }
 
     @Override
+    public void retrieveFoodListFromIds(ArrayList<String> ids, ICallback callback,ArrayList<Food> foodList) {
+        if(ids.size() <= 0){
+            callback.execute(foodList, true);
+            return;
+        }
+        String current = ids.remove(ids.size()-1);
+        if(MockData.MOCKFOODS.containsKey(current)){
+            foodList.add(MockData.MOCKFOODS.get(current));
+        }
+        retrieveFoodListFromIds(ids,callback,foodList);
+    }
+
+    @Override
     public void retrieveFoodListFromCartItems(ArrayList<CartItem> cartItems, ICallback callback, ArrayList<Food> foodList) {
         if(cartItems.size() <= 0){
             callback.execute(foodList, true);
@@ -79,7 +92,7 @@ public class MockDB implements IDatabase{
     }
 
     @Override
-    public void streamOrders(ICallback callback) {
+    public void getUserOrders(ArrayList<String> orderIDs, ICallback callback, ArrayList<Order> orders) {
 
     }
 
@@ -157,11 +170,21 @@ public class MockDB implements IDatabase{
     }
 
     @Override
+    public void updateCustomer(Customer customer, ICallback callback) {
+
+    }
+
+    @Override
     public void retrieveCart(String uid, ICallback callback) {
         Order order  = new Order();
         if(MockData.MOCKCURRENTORDERS.get(uid)!=null){
             order = MockData.MOCKCURRENTORDERS.get(uid);
         }
         callback.execute(order, true);
+    }
+
+    @Override
+    public void payForOrder(Order order, ICallback o) {
+
     }
 }

@@ -59,21 +59,21 @@ public class CartActivity extends AppCompatActivity {
     private void initList(){
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL, false);
         cartRecyclerViewList.setLayoutManager(linearLayoutManager);
-        cartAdapter = MenuListController.getDefaultMenuAdapter(this, new ICallback() {
+        cartAdapter = MenuListController.getModifierMenuAdapter(this, new ICallback() {
             @Override
             public void execute(Object... args) {
                 if(args.length > 0){
 
                 }
             }
-        },null);
+        },null,true);
         cartRecyclerViewList.setAdapter(cartAdapter);
         DBController.DATABASE.retrieveCart(CustomerController.GET_CURRENT_USER.getId(), new ICallback() {
             @Override
             public void execute(Object... args) {
-                if (args.length > 1) {
+                if (args.length > 0) {
                     Order order = args[0] instanceof Order ? (Order) args[0] : null;
-                    boolean success = args[1] instanceof Boolean ? (Boolean) args[1] : false;
+
                     Map<String, Integer> foodQuantities = new HashMap<>();
                     if (order != null) {
                         DBController.DATABASE.getSingleRestaurant(order.getRestaurantId(), (args0) -> {
@@ -90,18 +90,17 @@ public class CartActivity extends AppCompatActivity {
                                     for (CartItem item : order.getMeals()) {
                                         foodQuantities.put(item.getFoodId(), item.getQuantity());
                                     }
-                                    if (success) {
                                         Order orderCopy = new Order(order);
                                         ArrayList<CartItem> cartItems =new ArrayList<>(order.getMeals());
                                         System.out.println("ORDERCOPYYY 0___"+orderCopy.getMeals());
                                         DBController.DATABASE.retrieveFoodListFromCartItems(cartItems, new ICallback() {
                                             @Override
                                             public void execute(Object... args) {
-                                                if (args.length > 1) {
+                                                if (args.length > 0) {
                                                     ArrayList<Food> foods = args[0] instanceof ArrayList ? (ArrayList<Food>) args[0] : new ArrayList<>();
-                                                    boolean successRetrieval = args[1] instanceof Boolean ? (Boolean) args[1] : false;
-                                                    System.out.println("Successful: " + successRetrieval);
-                                                    if (successRetrieval) {
+
+                                                    if (!foods.isEmpty()) {
+                                                        System.out.println("Successful: " + true);
                                                         System.out.println(orderCopy.getMeals());
                                                         cartAdapter.updateFoods(foods, foodQuantities);
                                                         checkOutText.setOnClickListener(e->{
@@ -121,7 +120,7 @@ public class CartActivity extends AppCompatActivity {
                                         }, new ArrayList<>());
                                     }
                                 }
-                            }
+
                         });
                     }
                 }

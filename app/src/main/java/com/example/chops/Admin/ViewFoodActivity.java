@@ -36,13 +36,25 @@ public class ViewFoodActivity extends AppCompatActivity {
         addFoodBtn = findViewById(R.id.addFoodBtn);
         foodRecyclerView = findViewById(R.id.foodViewRecycler);
         foodRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        foodListAdapter = new FoodListAdapter(new ArrayList<>(), new ICallback() {
+        ArrayList<String> selectedDishes = getIntent().getExtras().getStringArrayList("currentlySelectedDishes");
+        System.out.println(selectedDishes);
+        foodListAdapter = new FoodListAdapter(new ArrayList<>(),selectedDishes, new ICallback() {
             @Override
             public void execute(Object... args) {
+
                 if(args.length>1){
+                    System.out.println("Food list viewer");
                     Food food = args[0] instanceof  Food ? (Food)args[0] : null;
+                    boolean checked = args[1] instanceof  Boolean ? (Boolean) args[1] : false;
                     if(food!=null){
-                        selectedFoods.put(food.getId(),food);
+                        System.out.println("Selected Food "+food.getId()+"-->"+checked);
+                        if(checked){
+                            selectedFoods.put(food.getId(),food);
+                        }else{
+                            selectedFoods.remove(food.getId());
+                            System.out.println("REMOVED!");
+                        }
+
 
                     }
                 }
@@ -74,8 +86,10 @@ public class ViewFoodActivity extends AppCompatActivity {
             Intent previousScreen = new Intent();
 
             ArrayList<Food> foods = new ArrayList<>(selectedFoods.values());
+            previousScreen.putExtra("tester", "Testttt!!!");
+            System.out.println(foods);
             previousScreen.putParcelableArrayListExtra("selectedFoods", foods);
-            setResult(RESULT_OK);
+            setResult(RESULT_OK, previousScreen);
             finish();
         });
     }
